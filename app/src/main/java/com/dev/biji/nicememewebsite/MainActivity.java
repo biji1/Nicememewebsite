@@ -57,14 +57,12 @@ public class MainActivity extends AppCompatActivity implements
                 // add other APIs and scopes here as needed
                 .build();
         _googleApiClient.connect();
-        System.out.println("Connect");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             _googleApiClient.connect();
-            System.out.println("Connect result");
         }
     }
 
@@ -72,14 +70,12 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         _googleApiClient.connect();
-        System.out.println("Connect start");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         _googleApiClient.disconnect();
-        System.out.println("dConnect");
     }
 
     @Override
@@ -87,6 +83,20 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         _count = _sharedPref.getInt("nmw_count", 0);
         _countText.setText(String.valueOf(_count));
+
+        // achievement
+        if (_googleApiClient != null && _googleApiClient.isConnected()) {
+            if (_count >= 1)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_1));
+            if (_count >= 10)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_2));
+            if (_count >= 100)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_3));
+            if (_count >= 1000)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_4));
+            if (_count >= 10000)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_5));
+        }
     }
 
     @Override
@@ -136,19 +146,16 @@ public class MainActivity extends AppCompatActivity implements
 
         // achievement
         if (_googleApiClient != null && _googleApiClient.isConnected()) {
-            System.out.println("check achiev");
-            switch (_count) {
-                case 1:
-                    Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_1));
-                case 10:
-                    Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_2));
-                case 100:
-                    Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_3));
-                case 1000:
-                    Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_4));
-                case 10000:
-                    Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_5));
-            }
+            if (_count == 1)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_1));
+            else if (_count == 10)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_2));
+            else if (_count == 100)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_3));
+            else if (_count == 1000)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_4));
+            else if (_count == 10000)
+                Games.Achievements.unlock(_googleApiClient, getString(R.string.achievement_5));
         }
     }
 
@@ -160,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onConnectionSuspended(int i) {
         _googleApiClient.connect();
-        System.out.println("Connect suspend");
     }
 
     @Override
